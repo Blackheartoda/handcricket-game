@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hand Cricket Game</title>
+    <style>
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    color: white;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.head {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    margin: 40px 0;
+}
+
+button {
+    background: #ff5722;
+    border: none;
+    border-radius: 30px;
+    color: white;
+    font-size: 24px;
+    padding: 15px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background: #e64a19;
+    transform: translateY(-2px);
+}
+
+.body {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.myscore, .computerscore, .targetbox {
+    font-size: 24px;
+}
+
+.responses {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 20px 0;
+}
+
+.responsebox {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.restart-button {
+    background: #4CAF50;
+    border-radius: 30px;
+    padding: 10px 20px;
+    font-size: 20px;
+    margin: 20px auto;
+    display: block;
+    transition: background 0.3s;
+}
+
+.restart-button:hover {
+    background: #45a049;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="toss">
+            <button class="toss-button" onclick="myCondition = 'bat';document.querySelector('.toss').innerHTML = ''">Bat</button>
+            <button class="toss-button" onclick="myCondition = 'bowl';document.querySelector('.toss').innerHTML = ''">Bowl</button>
+        </div>
+        <div class="head">
+            <button onclick="myInput = 1; playGame();">1</button>
+            <button onclick="myInput = 2; playGame();">2</button>
+            <button onclick="myInput = 3; playGame();">3</button>
+            <button onclick="myInput = 4; playGame();">4</button>
+            <button onclick="myInput = 5; playGame();">5</button>
+            <button onclick="myInput = 6; playGame();">6</button>
+        </div>
+        <div class="body"> 
+            <div class="myteam">
+                <h1>MY TEAM</h1>
+                <p class="myscore">Score: 0</p>
+            </div>
+            <div class="computerteam">
+                <h1>COMPUTER</h1>
+                <p class="computerscore">Score: 0</p>
+            </div>
+        </div>
+        <div class="responses">
+            <div class="responsebox">
+                <p class="youchose">You Chose</p>
+            </div>
+            <div class="responsebox">
+                <p class="wicketbox"></p>
+            </div>
+            <div class="responsebox">
+                <p class="computerchose">Computer Chose</p>
+            </div>
+        </div>
+        <div class="target">
+            <p class="targetbox">Target</p>
+        </div>
+        <button class="restart-button" onclick="reset()">Restart Game</button>
+    </div>
+
+    <script>
+        let myCondition = '';
+        let myInput = '';
+        let compInput = '';
+        let target = '';
+        let score2 = 0;
+        let score1 = 0;
+        let result = '';
+        function playGame () {
+            if (target) {
+                secondInnings();
+            } else if (!myCondition) {
+
+            } else if (!target) {
+                firstInnings();
+            }
+        }
+        function firstInnings() {
+            compInput = Math.ceil(Math.random() * 6);
+            if (myInput !== compInput) {
+                if (myCondition === 'bat') {
+                    score1 += Number(myInput);
+                    document.querySelector('.myscore').innerText = `Score: ${score1}`;
+                    document.querySelector('.wicketbox').innerText = ``;
+                }
+                else if (myCondition === 'bowl') {
+                    score1 += compInput;
+                    document.querySelector('.computerscore').innerText = `Score: ${score1}`;
+                    document.querySelector('.wicketbox').innerText = ``;
+                }
+            }
+            else if (myInput === compInput) {
+                target = score1 + 1;
+                document.querySelector('.targetbox').innerText = `Target: ${target}`;
+                document.querySelector('.wicketbox').innerText = `WICKET!`;
+                if (myCondition === 'bat') {
+                    myCondition = 'bowl';
+                } else if (myCondition === 'bowl') {
+                    myCondition = 'bat';
+                }
+            }
+            document.querySelector('.youchose').innerText = `You Chose ${myInput}`;
+            document.querySelector('.computerchose').innerText = `Computer Chose ${compInput}`;
+        }
+        function secondInnings() {
+            compInput = Math.ceil(Math.random() * 6);
+            document.querySelector('.youchose').innerText = `You Chose ${myInput}`;
+            document.querySelector('.computerchose').innerText = `Computer Chose ${compInput}`;
+            if (myInput !== compInput) {
+                if (myCondition === 'bat') {
+                    score2 += Number(myInput);
+                    document.querySelector('.myscore').innerText = `Score: ${score2}`;
+                    document.querySelector('.wicketbox').innerText = ``;
+                }
+                else if (myCondition === 'bowl') {
+                    score2 += compInput;
+                    document.querySelector('.computerscore').innerText = `Score: ${score2}`;
+                    document.querySelector('.wicketbox').innerText = ``;
+                }
+            }
+            else if (myInput === compInput ) {
+                if (myCondition === 'bat' && score2 !== Number(target) - 1) {
+                    result = 'You Lose';
+                    announceResult();
+                    reset();
+                } else if (myCondition === 'bowl' && score2 !== Number(target) - 1) {
+                    result = 'You Win';
+                    announceResult();
+                    reset();
+                } else if (score2 === Number(target) - 1) {
+                    result = 'It is a Tie';
+                    announceResult();
+                    reset();
+                }
+            }
+            if (score2 > Number(target) - 1) {
+                if (myCondition === 'bat') {
+                    result = 'You Win';
+                    announceResult();
+                    reset();
+                } else if (myCondition === 'bowl') {
+                    result = 'You Lose';
+                    announceResult();
+                    reset();
+                }
+            }
+            
+        }
+        function reset() {
+        target = '';
+        score2 = 0;
+        score1 = 0;
+        myCondition = '';
+        result = '';
+        document.querySelector('.computerscore').innerText = `Score: 0`;
+        document.querySelector('.myscore').innerText = `Score: 0`;
+        document.querySelector('.targetbox').innerText = `Target`;
+        document.querySelector('.youchose').innerText = `You Chose`;
+        document.querySelector('.computerchose').innerText = `Computer Chose`; 
+        document.querySelector('.wicketbox').innerText = '';  
+        document.querySelector('.toss').innerHTML =    `<button class="toss-button" onclick="
+                                                            myCondition = 'bat';
+                                                            document.querySelector('.toss').innerHTML = '';
+                                                            ">Bat</button>
+                                                        <button class="toss-button" onclick="
+                                                            myCondition = 'bowl';
+                                                            document.querySelector('.toss').innerHTML = '';
+                                                        ">Bowl</button>`;                           
+        }
+        function announceResult() {
+                alert(`${result}`);
+        }
+    </script>
+</body>
+</html>
